@@ -47,7 +47,7 @@
 ;       2 = Divide by 64
 ;-------------------------------------------------------------------------------
 
-BOARD           EQU     1
+BOARD           EQU     0
 SERIAL          EQU     0
 SIOA_BAUD       EQU     1
 SIOB_BAUD       EQU     1
