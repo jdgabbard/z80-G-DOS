@@ -1,0 +1,39 @@
+;-------------------------------------------------------------------------------
+; teraterm files
+;-------------------------------------------------------------------------------
+
+These files provide a crude integration with the function keys of teraterm.
+They make it easier to download hex files to G80.  They are a quick hack until I can figure out how to share the com port between teraterm and a download program that can be integrated into a makefile.
+
+
+Usage instructions:
+
+1 - Edit the files
+NOTE that these files contain hard coded pathnames.  To use them you *must* edit the pathnames according to your local file layout.  They will not work otherwise.
+
+KEYBOARD.CNF - on the line starting with 'User1' edit the pathname to the send_a.out.ttl file on your system.  Do not change any other parts of this line.  
+
+To add other similar actions first read the teraterm documentation.  The order of these lines matter. The magic numbers in these lines matter.
+
+send_a.out.ttl - on the line starting with 'sendfile' edit the pathname to the a.out file on your system.
+
+2 - Insall the key map
+Launch teraterm.
+On the menu bar click 'Setup / Load Key Map...'
+Select the KEYBOARD.CNF file edited above.
+
+It is probably possible to install this as the default key map by replacing the original KEYBOARD.CNF.
+
+3 - Use the key map
+Use whatever your toolchain is to create an Intel-Hex file called a.out in at the location specified above.  The build.bat file will do this, so that a.out is the hex file from the last run of build.bat.
+
+Connect a G80-S to the teraterm and ensure that the '>' prompt is visible.
+
+Press Ctrl-F1.  This will run the send_a.out.ttl file.  That  will send the hexload command to G80-S, wait for the prompt, and then send the contents of a.out.
+
+
+The net result is that my build cycles consist of few keystrokes:
+ - uparrow/enter in a cmd window to re-run the latest build.bat command.
+ - Ctrl-F1 in teraterm to download the results to G80
+
+Not quite as nice as integrating a download command into a makefile, but much better than doing this manually.

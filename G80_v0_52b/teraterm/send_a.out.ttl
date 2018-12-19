@@ -1,0 +1,11 @@
+connect '/C=32'
+timeout=5
+:again
+sendln 'hexload'#13
+sendln #10
+wait 'INTEL HEX LOAD: '
+if result=1 goto sendit
+goto again
+:sendit
+sendfile 'C:\Users\mike\Documents\G80-S\z80-G-DOS\G80_v0_52b\a.out' 1
+end
