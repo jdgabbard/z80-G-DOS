@@ -162,20 +162,18 @@ INCLUDE "basic.asm"
         ENDIF
 
         IF (CFORTH = 1)
-INCLUDE "camel80.asm"
+INCLUDE forth\camel80.asm
         ENDIF
 
 
+LSTROM:                                 ;ALL ABOVE CAN BE ROM
 ;-------------------------------------------------------------------------------
 ; MEMORY LOCATIONS FOR TinyBASIC
 ;-------------------------------------------------------------------------------
         IF (BASIC = 1)
-LSTROM:                                 ;ALL ABOVE CAN BE ROM
-;       ORG  08000H                     ;HERE DOWN MUST BE RAM
-        ORG  0FF00H
-VARBGN: DS   55                         ;VARIABLE @(0)
-BUFFER: DS   64                         ;INPUT BUFFER
-BUFEND: DS   1                          ;BUFFER ENDS
-STKLMT: DS   1                          ;TOP LIMIT FOR STACKB
+VARBGN: EQU	0FF00H                  ;VARIABLE @(0)
+BUFFER: EQU	(VARBGN+55)             ;INPUT BUFFER
+BUFEND: EQU	(BUFFER+64)             ;BUFFER ENDS
+STKLMT: EQU	(BUFEND+1)              ;TOP LIMIT FOR STACKB
         ENDIF
         END
