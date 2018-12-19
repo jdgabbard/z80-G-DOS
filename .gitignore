@@ -1,0 +1,7 @@
+*.asm~
+/G80_v0_52b/*.swp
+/G80_v0_52b/build.bat~
+/G80_v0_52b/*.hex
+/G80_v0_52b/*.lst
+/G80_v0_52b/*.public
+/G80_v0_52b/a.out
