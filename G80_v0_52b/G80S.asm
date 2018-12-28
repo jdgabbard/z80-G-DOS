@@ -115,8 +115,10 @@ DCALL13:                        ;CALL 00DDh
         JP ASCIIHEX_TO_BYTE
 DCALL14:                        ;CALL 00C0h
         JP CONVERT_HEX_VAL
+DCALL15:                        ;CALL 00C3h
+        JP INIT
 
-;DCALL15 .. DCALL24
+;DCALL16 .. DCALL24
 
 ;-------------------------------------------------------------------------------
 ; MONITOR/OS
@@ -140,7 +142,10 @@ INIT:
         CALL PRINT_STRING
         CALL PRINT_PROMPT
 
+
 ; SERMAIN_LOOP, THE MAIN LOOP FOR THE SERIAL MONITOR.
+MONITOR:
+;       CALL PRINT_PROMPT		;should we do this here?
 MAIN_LOOP:
         CALL GET_KEY                    ;IF SET, GET THE KEY.
         CALL BUF_WRITE                  ;WRITE TO BUFFER
@@ -148,7 +153,7 @@ MAIN_LOOP:
         SUB C
         JR NZ,MAIN_LOOP                 ;IF NOT LINE FEED, RESTART LOOP
         CALL IN_CMD_CHK                 ;CHECK IF COMMAND
-        JR MAIN_LOOP
+        JR MONITOR
 
 
 INCLUDE "sys_routines.asm"

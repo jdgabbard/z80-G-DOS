@@ -17,16 +17,20 @@ CALL_CMD:
         LD E,A
         CALL ASCIIHEX_TO_BYTE
         LD H,A                  ;PLACE UPPER BYTE IN H
+
         LD A,(BUF_BOT+7)
         LD D,A
         LD A,(BUF_BOT+8)        ;FOR NICE ROUND-NUMBER DUMP.
         LD E,A
         CALL ASCIIHEX_TO_BYTE
         LD L,A                  ;PLACE LOWER BYTE IN L
-        LD DE,(CALL_CMD+30)           ;PAD THE SP FOR FUTURE PC.
-        PUSH DE                 ;PUSH ONTO THE STACK...
+
+        LD DE,RET_HERE          ;Pretend we have call (hl)
+        PUSH DE
         JP (HL)                 ;GO TO MEMORY ADDRESS TO EXECUTE
-        RET                     ;RETURN AFTER RETURN...BROKEN...
+RET_HERE:
+	CALL PRINT_PROMPT       ;move this to the monitor loop?
+        RET                     
 
 CLS:
         LD HL,CS_MSG

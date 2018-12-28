@@ -51,6 +51,7 @@ IH_LOAD_LOOP:
         CALL IH_LOAD_CHK
         LD A,L
         CALL IH_LOAD_CHK
+	SET 7,H				;G80S - force address to RAM
 
         CALL GET_BYTE                   ;GET THE RECORD TYPE
         CALL IH_LOAD_CHK                ;UPDATE CHECKSUM
