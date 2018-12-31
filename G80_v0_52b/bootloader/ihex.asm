@@ -6,13 +6,14 @@
 ; Allocate space in SCRATCHPAD memory
 ;----------------------------------------------------
 	scratchpad	ihCount,	1
-	scratchpad	ihType,		1
+;	scratchpad	ihType,		1	;no longer used
 	scratchpad	ihCksum,	1
 	scratchpad	ihEOF,		1
 	scratchpad	ihResult,	1
 	scratchpad	ihAddr,		2
-	scratchpad	ihMinAddr,	2
-	scratchpad	ihMaxAddr,	2
+;	scratchpad	ihESA,		2	;no longer used
+	scratchpad	ihMinAddr,	2	;not yet used
+	scratchpad	ihMaxAddr,	2	;not yet used
 
 ;----------------------------------------------------
 ; ihLoad - read intel hex records into RAM
@@ -76,7 +77,7 @@ ihChecksum:
 	and	a
 	jr	z,ihLoop		;still going
 
-	ld	a,(ihResult)		;return success
+	ld	a,(ihResult)		;return accumulated result
 	ret
 
 ihFail:
@@ -93,25 +94,23 @@ ihFail:
 ihInit:
 	ld	a,0
 
-	; default return value
+	; default return value = success
 	ld	(ihResult),a
 
 	; reset EOF flag
 	ld	(ihEOF),a
 
-	; reset Extended Segment Address
+	; reset max and min addresses
 	ld	hl,0
 	ld	(ihMaxAddr),hl
 	dec	hl
 	ld	(ihMinAddr),hl
 
 	; print iHex prompt
-	ld	hl,ihMsg1
-	call	puts
+	call	putCR
+	putLine	"INTEL HEX LOAD:  "
 
 	ret
-ihMsg1:
-	DB	CR,LF,"INTEL HEX LOAD:  ",CR,LF,0
 
 ;----------------------------------------------------
 ; ihWaitForColon
@@ -157,10 +156,11 @@ ihRead1Err:			;return non zero
 
 ;----------------------------------------------------
 ; ihRead2
-; read and echo 2 hex digits.  update cksum.
+; read and echo 2 hex digits.  update cksum or result.
 ;----------------------------------------------------
 ihRead2:
 	push	bc		;uses bc
+
 
 	call	ihRead1		;nybble 1
 	sla	a		;shift left zero fill
@@ -176,7 +176,6 @@ ihRead2:
 	ld	a,(ihCksum)
 	add	a,b
 	ld	(ihCksum),a
-
 	ld	a,b
 
 	pop	bc		;uses bc
@@ -184,7 +183,7 @@ ihRead2:
 
 ;----------------------------------------------------
 ; ihRead4
-; read and echo 4 hex digits.  update cksum.
+; read and echo 4 hex digits.  update cksum or result.
 ;----------------------------------------------------
 ihRead4:
 	push	af		;uses af

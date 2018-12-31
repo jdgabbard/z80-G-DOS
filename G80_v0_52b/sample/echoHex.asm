@@ -1,6 +1,5 @@
 ;----------------------------------------------------
-; Standalone Flash Utility
-; Copy 8003-C000 to ROM at 0003
+; Test serial i/o routines
 ;----------------------------------------------------
 
 ; Board Settings
@@ -13,30 +12,29 @@ MAIN_LOOP	EQU	1	;fix me
 ;----------------------------------------------------
 ; Load dependencies
 ;----------------------------------------------------
-INCLUDE	equates.asm
-INCLUDE	bootloader/bootloader.h
-INCLUDE	bootloader/putText.h
+INCLUDE equates.asm
+INCLUDE	bootloader\bootloader.h
+INCLUDE bootloader\putText.h
 
-org     0D000h
+org     08000h
 ;----------------------------------------------------
 ; Entry point
 ;----------------------------------------------------
-flash:
-        putLine	"Copy RAM 8003-C000 to ROM at 0003"
-
-	ld	hl,08003H		;source
-	ld	de,00003H		;destination
-	ld	bc,03FFDH		;byte count
-
-	call	@at28Flash		;call the burner
-
+main:
+        putLine	"Enter text to echo.  Press reset to exit."
+loop:
+        call	@getc
 	call	@put2Hex
 	call	@putSP
-	putText	"Done"
 
-	; ROM has changed - can't return
-HCF:	putLine	"Press reset to continue"
-	halt
-	jr	HCF
+;	call	@delay1ms
+;	call	@delay100us
+;	call	@delay10us
+
+	call	@testc
+	and	a
+	jr	nz,loop
+	call	@putCR
+	jr	loop
 
 	END

@@ -80,7 +80,8 @@ format.asm
  - Formatted serial I/O 
 
 putText.h
- - macro for simple output of a line of text
+ - macros for simple text output
+ - both with and without added CRLF
 
 delay.asm
  - Low level delay routines
@@ -113,6 +114,10 @@ flashD000.asm
 echo.asm
  - simple example of using bootloader routines from separately assembled code
  - origin 8000h
+ - optional
+
+echoHex.asm
+ - similar to echo.asm, but prints characters in hex
  - optional
 
 -------------------------------------------------------------------------------

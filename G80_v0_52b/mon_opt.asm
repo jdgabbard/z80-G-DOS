@@ -29,7 +29,6 @@ CALL_CMD:
         PUSH DE
         JP (HL)                 ;GO TO MEMORY ADDRESS TO EXECUTE
 RET_HERE:
-	CALL PRINT_PROMPT       ;move this to the monitor loop?
         RET                     
 
 CLS:

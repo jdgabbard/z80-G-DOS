@@ -28,22 +28,30 @@ INCLUDE	bootloader\jumpvector.h
 	jumpVector	 0, bootloader	;bootloader.asm
 	jumpVector	 1, ihLoad	;ihex.asm
 	jumpVector	 2, at28Flash	;at28.asm
+
 	jumpVector	 3, initDART	;serial.asm
 	jumpVector	 4, testc	;serial.asm
 	jumpVector	 5, getc	;serial.asm
 	jumpVector	 6, putc	;serial.asm
 	jumpVector	 7, puts	;serial.asm
 	jumpVector	 8, flush	;serial.asm
+
 	jumpVector	 9, delay	;delay.asm
 	jumpVector	10, delay1ms	;delay.asm
-	jumpVector	11, putRegs	;format.asm
-	jumpVector	12, putCR	;format.asm
-	jumpVector	13, putSP	;format.asm
-	jumpVector	14, putHex1	;format.asm
-	jumpVector	15, putHex2	;format.asm
+	jumpVector	11, delay100us	;delay.asm
+	jumpVector	12, delay10us	;delay.asm
 
-	jumpVectorStop	15		;set origin to end of jump vector
+	jumpVector	13, putRegs	;format.asm
+	jumpVector	14, putCR	;format.asm
+	jumpVector	15, putSP	;format.asm
+	jumpVector	16, get1Hex	;format.asm
+	jumpVector	17, get2Hex	;format.asm
+	jumpVector	18, get4Hex	;format.asm
+	jumpVector	19, put1Hex	;format.asm
+	jumpVector	20, put2Hex	;format.asm
+	jumpVector	21, put4Hex	;format.asm
 
+	jumpVectorStop	21		;set origin to end of jump vector
 
 ;dependencies ---------------------------------------
 NoJumpVectorMacros EQU 1		;dont use jumpvector inside bootloader
@@ -70,8 +78,6 @@ bootloader:				;enter here from hard reset
 	call	initDART
 	
 ; pause one second ----------------------------------
-	putText	"Bootloader ..."
-
 	ld	bc,100
 	call	delay
 
@@ -82,6 +88,8 @@ bootloader:				;enter here from hard reset
 
 ; otherwise, download a new ROM ---------------------
 download:
+	putLine	"Bootloader ..."
+
 	call	ihLoad
 	cp	0
 	jp	nz,download

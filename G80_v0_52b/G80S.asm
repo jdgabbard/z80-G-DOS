@@ -140,12 +140,13 @@ INIT:
         CALL PRINT_STRING
         LD HL,SIGNON_MSG
         CALL PRINT_STRING
-        CALL PRINT_PROMPT
+;       CALL PRINT_PROMPT		;move to monitor loop
 
 
 ; SERMAIN_LOOP, THE MAIN LOOP FOR THE SERIAL MONITOR.
 MONITOR:
-;       CALL PRINT_PROMPT		;should we do this here?
+	CALL BUF_CLR			;should we do this here?
+	CALL PRINT_PROMPT		;should we do this here?
 MAIN_LOOP:
         CALL GET_KEY                    ;IF SET, GET THE KEY.
         CALL BUF_WRITE                  ;WRITE TO BUFFER

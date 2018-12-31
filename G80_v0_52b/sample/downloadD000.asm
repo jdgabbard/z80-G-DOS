@@ -18,10 +18,12 @@ INCLUDE dcall.h
 ; download a new image ------------------------------
 download:
 	call	@ihLoad
+	push	af
 	call	@flush
 	ld	hl,msg1
 	call	@puts
-	call	@putHex1
+	pop	af
+	call	@put2Hex
 	ld	hl,msg2
 	call	@puts
 

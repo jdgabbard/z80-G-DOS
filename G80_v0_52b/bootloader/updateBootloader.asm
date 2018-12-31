@@ -10,7 +10,7 @@ SIOB_BAUD       EQU     1
 MAIN_LOOP	EQU	1	;fix me
 
 	org	08000H
-	jp	burnBootLoader
+	jp	updateBootLoader
 
 ;dependencies ---------------------------------------
 ; no calls through jumpvector while we are updating it...
@@ -29,11 +29,16 @@ AT28_ROM_TOP	EQU	ROM_TOP		;allows at28 to flash reserved ROM
 INCLUDE bootloader\at28.asm
 INCLUDE bootloader\format.asm
 
-burnBootLoader:				;enter here
+updateBootLoader:			;enter here
 
 ; initialize ----------------------------------------
 	di				;initialize interrupts
 	ld	sp,newStack		;move stack to low RAM
+
+	ld	c,SIOA_C		;initialize UARTs
+	call	initDART
+	ld	c,SIOB_C
+	call	initDART
 
 	ld	a,0			;clear RAM corresponding to
 	ld	hl,BootLow+08000H	;the reserved ROM
@@ -42,7 +47,7 @@ burnBootLoader:				;enter here
 	ld	(hl),a
 	ldir
 
-	putText	"Update Bootloader:"
+	putLine	"Update Bootloader:"
 
 ; download a new bootloader image -------------------
 download:
@@ -51,13 +56,13 @@ download:
 	jp	z,flashit
 	
 	call	putCR
-	putText	"Download failure.  Retry..."
+	putLine	"Download failure.  Retry..."
 	jp	download
 
 ; if successful, flash the bootloader ---------------
 flashit:
 	call	putCR
-	;putText	"Flash..."
+	;putLine	"Flash..."
 
 	ld	hl,BootLow+08000H
 	ld	de,BootLow
@@ -69,14 +74,14 @@ flashit:
 
 ; if successful, hook bootloader into reset sequence--
 hook:
-	;putText	"Hook..."
+	;putLine	"Hook..."
 	ld	hl,hookTemplate
 	ld	de,0
 	ld	bc,00003H
 	call	at28Flash
 	cp	0
 	jr	nz,unhook
-	putText	"Update OK"
+	putLine	"Update OK"
 	; fall through
 
 ; if successful, back to the monitor ----------------
@@ -90,7 +95,7 @@ outahere:
 ; serious problem!  try to minimize the grief
 ;----------------------------------------------------
 unhook:
-	putText	"Update failure"
+	putLine	"Update failure"
 	ld	hl,unhookTemplate
 	ld	de,0
 	ld	bc,00003H
@@ -99,7 +104,7 @@ unhook:
 	jr	z,outahere
 	; fall through
 
-	putText	"Bootloader corrupted" 
+	putLine	"Bootloader corrupted" 
 	jp	outahere
 
 ;----------------------------------------------------
