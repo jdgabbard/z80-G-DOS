@@ -28,7 +28,7 @@ Pre-requisites:
 High level operation:
  - Take control from the hardware reset
  - Initialize interrupts, stack and serial port
- - Display a message and wait for one second for serial input
+ - Wait for one second for serial input
  - If input is received, repeat the following until no error
  	- Prompt for and download a hex image to RAM
  	- Copy the image from RAM to ROM
@@ -120,6 +120,10 @@ echoHex.asm
  - similar to echo.asm, but prints characters in hex
  - optional
 
+helloWorld.asm
+ - print a line of text and return to the monitor
+ - optional
+
 -------------------------------------------------------------------------------
 monitor directory
 -------------------------------------------------------------------------------
@@ -130,6 +134,7 @@ dcall.h
 
 equates.asm
  - add ROM_BOT symbol
+ - definitions for serial port initialization
  - update existing file
 
 hex_load.asm
@@ -162,12 +167,12 @@ The bootloader will be written and be linked into the restart vector.
 if desired, set teraterm/serial parameters to 0ms/char, 10ms/line
 
 -------------------------------------------------------------------------------
-usage instructions
+bootloader usage instructions
 -------------------------------------------------------------------------------
 press reset
-while the Bootloader... message is displayed, press enter on SIOA
+press enter on SIOA within the first second
 when prompted, download G80S.hex
 The monitor will be written and restarted.
 
-If no character is received within one second of the Bootloader... message then control passes to the monitor.
+If no character is received within one second then control passes directly to the monitor.
 
